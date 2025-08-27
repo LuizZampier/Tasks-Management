@@ -64,14 +64,21 @@ export class TeamMembersController {
   }
 
   async remove(req: Request, res: Response){
-    const { userID } = req.params
+    const { teamId, userId } = req.params
 
-    const userIsOnTeam = await prisma.teamMember.findFirst({ where: { userId: userID }})
+    const userIsOnTeam = await prisma.teamMember.findFirst({ 
+      where: { 
+        teamId: teamId,
+        userId: userId
+      }
+    })
 
     if(!userIsOnTeam) {
       throw new AppError("user not found")
     }
 
-    return res.json(userIsOnTeam)
+    const removedMember = await prisma.teamMember.delete({where: {id: userIsOnTeam.id}})
+
+    return res.status(200).json()
   }
 }
