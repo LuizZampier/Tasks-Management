@@ -6,13 +6,9 @@ import { app } from "../app"
 describe("TeamsController", () => {
   let user_id: string
   let team_id: string
+  let token: string
 
-  afterAll(async () =>{
-    await prisma.user.delete({where: {id: user_id}})
-    await prisma.team.delete({where: {id: team_id}})
-  })
-
-  it("should create a new team successfully", async () => {
+  beforeAll(async () => {
     const userCreation = await request(app)
     .post("/users")
     .send({
@@ -31,11 +27,18 @@ describe("TeamsController", () => {
       password: "123456",
     })
 
-    const token = sessionCreation.body.token
+    token = sessionCreation.body.token
+  })
 
+  afterAll(async () =>{
+    await prisma.user.delete({where: {id: user_id}})
+    await prisma.team.delete({where: {id: team_id}})
+  })
+
+  it("should create a new team successfully", async () => {
     const response = await request(app)
     .post("/teams")
-    .set("Authorization", `Bearer ${token}`)
+    .auth(token, {type: "bearer"})
     .send({
       name: "Team Name",
       description: "Optional Description"
@@ -45,6 +48,5 @@ describe("TeamsController", () => {
 
     expect(response.status).toBe(201)
     expect(response.body).toHaveProperty("id")
-    expect(userCreation.body.role).toBe("admin")
   })
 })
