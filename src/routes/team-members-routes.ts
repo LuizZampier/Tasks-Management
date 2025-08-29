@@ -18,7 +18,7 @@ teamMembersRoutes.get("/:id/show",
   teamMembersController.show
 )
 
-teamMembersRoutes.delete("/:id",
+teamMembersRoutes.delete("/:teamId/:userId",
   ensureAuthenticated,
   verifyUserAuthorization(["admin"]),
   teamMembersController.remove
