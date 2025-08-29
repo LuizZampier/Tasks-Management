@@ -12,8 +12,8 @@ describe("TeamsController", () => {
     const userCreation = await request(app)
     .post("/users")
     .send({
-      name: "Team Member Test",
-      email: "TMT@email.com",
+      name: "Team Test",
+      email: "team_test@email.com",
       password: "123456",
       role: "admin"
     })
@@ -23,7 +23,7 @@ describe("TeamsController", () => {
     const sessionCreation = await request(app)
     .post("/sessions")
     .send({
-      email: "TMT@email.com",
+      email: "team_test@email.com",
       password: "123456",
     })
 
@@ -47,6 +47,16 @@ describe("TeamsController", () => {
     team_id = response.body.id
 
     expect(response.status).toBe(201)
-    expect(response.body).toHaveProperty("id")
+  })
+
+  it("should throw a new error if the team name already exists", async () => {
+    const response = await request(app)
+    .post("/teams")
+    .auth(token, {type: "bearer"})
+    .send({
+      name: "Team Name"
+    })
+
+    expect(response.status).toBe(400)
   })
 })

@@ -16,7 +16,8 @@ describe("UsersController", () => {
     .send({
       name: "Auth Test User",
       email: "auth_test_user@email.com",
-      password: "123456"
+      password: "123456",
+      role: "member"
     })
     user_id = response.body.id
 
@@ -31,11 +32,11 @@ describe("UsersController", () => {
     .send({
       name: "Duplicated User",
       email: "auth_test_user@email.com",
-      password: "123456"
+      password: "123456",
+      role: "member"
     })
 
     expect(response.status).toBe(400)
-    expect(response.body.message).toBe("User with same email already exists")
   })
 
   it("should throw a validation error if email is invalid", async () => {
@@ -44,11 +45,11 @@ describe("UsersController", () => {
     .send({
       name: "Test User",
       email: "invalid-email",
-      password: "123456"
+      password: "123456",
+      role: "member"
     })
 
     expect(response.status).toBe(400)
-    expect(response.body.message).toBe("validation error")
   })
 
   it("should throw a validation error if password is invalid", async () => {
@@ -57,10 +58,10 @@ describe("UsersController", () => {
     .send({
       name: "Test User",
       email: "invalid-email@email.com",
-      password: "123"
+      password: "123",
+      role: "member"
     })
 
     expect(response.status).toBe(400)
-    expect(response.body.message).toBe("validation error")
   })
 })

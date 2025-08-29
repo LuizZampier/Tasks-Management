@@ -44,11 +44,16 @@ export class TeamMembersController {
   }
 
   async show(req: Request, res: Response) {
-    const { teamId } = req.params
+    const { id } = req.params
 
     const teamMembers = await prisma.teamMember.findMany({
-      where: { teamId },
       select: {
+        team: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
         user: {
           select: {
             id:true,
@@ -57,7 +62,8 @@ export class TeamMembersController {
             role: true
           }
         }
-      }
+      },
+      where: { teamId: id }
     })
 
     return res.json(teamMembers)

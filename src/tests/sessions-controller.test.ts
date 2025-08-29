@@ -18,6 +18,7 @@ describe("SessionsController", () => {
       name: "Test User",
       email: "testuser@email.com",
       password: "123456",
+      role: "member"
     })
 
     user_id = userResponse.body.id
